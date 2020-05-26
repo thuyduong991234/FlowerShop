@@ -14,7 +14,7 @@ class CreateTransactionFlowersTable extends Migration
     public function up()
     {
         Schema::create('transaction_flower', function (Blueprint $table) {
-            $table->uuid('id')->primary();
+            $table->id();
             $table->uuid('transaction_id')->references('id')->on('transactions')->onDelete('cascade');
             $table->uuid('flower_id')->references('id')->on('flowers')->onDelete('cascade');
             $table->integer('qty');

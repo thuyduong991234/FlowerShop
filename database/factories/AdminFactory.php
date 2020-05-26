@@ -4,6 +4,7 @@
 
 use App\Model;
 use Faker\Generator as Faker;
+use Illuminate\Support\Facades\Hash;
 
 $factory->define(\App\Admin::class, function (Faker $faker) {
     return [
@@ -11,6 +12,6 @@ $factory->define(\App\Admin::class, function (Faker $faker) {
         'last_name' => $faker->lastName,
         'first_name' => $faker->firstName,
         'username' => $faker->userName,
-        'password' => $faker->password,
+        'password' => Hash::make('hello'),
     ];
 });
