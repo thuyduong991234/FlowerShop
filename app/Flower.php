@@ -8,8 +8,17 @@ use Illuminate\Support\Str;
 class Flower extends Model
 {
     //
-
     public $incrementing = false;
+    protected $fillable = [
+        'catalog_id',
+        'name',
+        'color',
+        'price',
+        'discount',
+        'avatar',
+        'images',
+        'view'
+    ];
     protected static function boot() {
         parent::boot();
         static::creating(function ($flower) {

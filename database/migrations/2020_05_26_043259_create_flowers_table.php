@@ -17,12 +17,12 @@ class CreateFlowersTable extends Migration
             $table->uuid('id')->primary();
             $table->uuid('catalog_id')->references('id')->on('catalogs')->onDelete('cascade');
             $table->string('name');
-            $table->string('color');
-            $table->double('price', 8,2);
-            $table->integer('discount');
-            $table->string('avatar');
-            $table->text('images');
-            $table->integer('view');
+            $table->string('color')->nullable(true);
+            $table->double('price', 8,2)->nullable(true);
+            $table->integer('discount')->nullable(true);
+            $table->string('avatar')->nullable(true);
+            $table->text('images')->nullable(true);
+            $table->integer('view')->nullable(true);
             $table->timestamps();
         });
     }

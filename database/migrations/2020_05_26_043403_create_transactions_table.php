@@ -16,7 +16,7 @@ class CreateTransactionsTable extends Migration
         Schema::create('transactions', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->tinyInteger('status');
-            $table->uuid('customer_id')->references('id')->on('customers')->nullable();
+            $table->uuid('customer_id')->references('id')->on('customers')->nullable(true);
             $table->string('customer_last_name');
             $table->string('customer_first_name');
             $table->string('customer_email');
