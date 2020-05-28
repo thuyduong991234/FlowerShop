@@ -3,7 +3,8 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\FlowerRequest;
+use App\Http\Requests\FlowerRequestPatch;
+use App\Http\Requests\FlowerRequestPost;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Flower;
@@ -28,21 +29,12 @@ class FlowerController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(FlowerRequest $request)
+    public function store(FlowerRequestPost $request)
     {
         //
-        $request->validated();
+        //$request->validated();
 
-        Flower::create([
-            'catalog_id' => $request->input('catalog_id'),
-            'name' => $request->input('name'),
-            'color' => $request->input('color'),
-            'price' => $request->input('price'),
-            'discount' => $request->input('discount'),
-            'avatar' => $request->input('avatar'),
-            'images' => $request->input('images'),
-            'view' => $request->input('view')
-        ]);
+        Flower::create($request->all());
 
         return response('Saved successfully', 201);
 
@@ -68,21 +60,12 @@ class FlowerController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(FlowerRequest $request, $id)
+    public function update(FlowerRequestPatch $request, $id)
     {
         //
-        $request->validated();
+        //$request->validated();
 
-        Flower::where('id', $id)->update([
-            'catalog_id' => $request->input('catalog_id'),
-            'name' => $request->input('name'),
-            'color' => $request->input('color'),
-            'price' => $request->input('price'),
-            'discount' => $request->input('discount'),
-            'avatar' => $request->input('avatar'),
-            'images' => $request->input('images'),
-            'view' => $request->input('view')
-        ]);
+        Flower::where('id', $id)->update($request->all());
         return response('Updated successfully', 200);
     }
 

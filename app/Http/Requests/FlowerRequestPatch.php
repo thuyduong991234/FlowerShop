@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class FlowerRequest extends FormRequest
+class FlowerRequestPatch extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,17 +24,20 @@ class FlowerRequest extends FormRequest
     public function rules()
     {
         return [
-            'catalog_id' => 'required',
-            'name' => 'required|max:191',
+            //
+            'catalog_id' => 'exists:catalogs,id',
+            'name' => 'sometimes|required|max:191',
+            'avatar' => 'nullable|url'
         ];
     }
 
     public function messages()
     {
         return [
-            'catalog_id.required' => "Catalog_id is required!",
+            'catalog_id.exists' => "Catalog_id don't exists!",
             'name.required' => "Name of the flower is required!",
-            'name.max:191' => "Max size of name is 191 characters!"
+            'name.max:191' => "Max size of name is 191 characters!",
+            'avatar.url' => "Avatar must be a URL format!"
         ];
     }
 }
