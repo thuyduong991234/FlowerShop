@@ -16,10 +16,23 @@ class FlowerController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         //
-        $listFlowers = Flower::all();
+        $name = $request->input('name');
+        $color = $request->input('color');
+        $fromDate = $request->input('fromDate');
+        $toDate = $request->input('toDate');
+
+        $listFlowers = Flower::where('name','LIKE','%'.$name.'%')
+                                ->where('color','LIKE','%'.$color.'%')
+                                ->when($fromDate, function ($query, $fromDate){
+                                    return $query->whereDate('created_at','>=',$fromDate);
+                                })
+                                ->when($toDate, function ($query, $toDate){
+                                    return $query->whereDate('created_at','<=',$toDate);
+                                })
+                                ->paginate(5);
         return response($listFlowers, 200);
     }
 
@@ -46,10 +59,9 @@ class FlowerController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Flower $flower)
     {
         //
-        $flower = Flower::where('id', '=', $id)->get();
         return response($flower, 201);
     }
 
@@ -60,12 +72,10 @@ class FlowerController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(FlowerRequestPatch $request, $id)
+    public function update(FlowerRequestPatch $request, Flower $flower)
     {
         //
-        //$request->validated();
-
-        Flower::where('id', $id)->update($request->all());
+        $flower->update($request->all());
         return response('Updated successfully', 200);
     }
 
@@ -75,10 +85,10 @@ class FlowerController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Flower $flower)
     {
         //
-        Flower::where('id',$id)->delete();
-        return response('Deleted successfully', 200);
+        $flower->delete();
+        return response('Deleted successfully', 204);
     }
 }
