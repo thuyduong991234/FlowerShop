@@ -17,15 +17,12 @@ class CatalogController extends Controller
      */
     public function index(Request $request)
     {
-        //
-        $name = $request->input('name');
-        $parent_id = $request->input('parentID');
+        $parentID= $request->input('parentID');
         $fromDate = $request->input('fromDate');
         $toDate = $request->input('toDate');
-
-        $listCatalogs = Catalog::where('name','LIKE','%'.$name.'%')
-            ->when($parent_id, function ($query, $parent_id){
-                return $query->where('parent_id','LIKE','%'.$parent_id.'%');
+        $listCatalogs = Catalog::where('name','LIKE','%'.$request->input('name').'%')
+            ->when($parentID, function ($query, $parentID){
+                return $query->where('parent_id','LIKE','%'.$parentID.'%');
             })
             ->when($fromDate, function ($query, $fromDate){
                 return $query->whereDate('created_at','>=',$fromDate);

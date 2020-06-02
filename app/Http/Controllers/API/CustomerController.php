@@ -18,14 +18,10 @@ class CustomerController extends Controller
      */
     public function index(Request $request)
     {
-        //
-        $lastName = $request->input('lastName');
-        $firstName = $request->input('firstName');
         $fromDate = $request->input('fromDate');
         $toDate = $request->input('toDate');
-
-        $listCustomers = Customer::where('last_name','LIKE','%'.$lastName.'%')
-            ->where('first_name','LIKE','%'.$firstName.'%')
+        $listCustomers = Customer::where('last_name','LIKE','%'.$request->input('lastName').'%')
+            ->where('first_name','LIKE','%'.$request->input('firstName').'%')
             ->when($fromDate, function ($query, $fromDate){
                 return $query->whereDate('created_at','>=',$fromDate);
             })
@@ -45,10 +41,11 @@ class CustomerController extends Controller
     public function store(CustomerRequestPost $request)
     {
         //
-        $customer = new Customer;
-        $customer->fill($request->except('password'));
-        $customer->password = Hash::make($request->input('password'));
-        $customer->save();
+        //$customer = new Customer;
+        //$customer->fill($request->except('password'));
+        //$customer->password = Hash::make($request->input('password'));
+        //$customer->save();
+        Customer::create($request->all());
 
         return response('Saved successfully', 201);
     }
@@ -75,18 +72,13 @@ class CustomerController extends Controller
     public function update(CustomerRequestPut $request, Customer $customer)
     {
         //dd($customer);
-
-        $customer->update([
-            'last_name' => $request->input('last_name'),
-            'first_name' => $request->input('first_name'),
-            'email'=> $request->input('email'),
-            'password' => Hash::make($request->input('password')),
-            'phone' => $request->input('phone'),
-            'address' => $request->input('address')
-        ]);
-
-
-        return response('Updated successfully', 200);
+        if(Hash::check($request->input('oldPassword'), $customer->password) ) {
+            $customer->update($request->all());
+            return response('Updated successfully', 200);
+        }
+        else{
+            return response("Current password isn't right!", 422);
+        }
     }
 
     /*

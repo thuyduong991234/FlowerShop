@@ -17,21 +17,17 @@ class FlowerController extends Controller
      */
     public function index(Request $request)
     {
-        //
-        $name = $request->input('name');
-        $color = $request->input('color');
         $fromDate = $request->input('fromDate');
         $toDate = $request->input('toDate');
-
-        $listFlowers = Flower::where('name','LIKE','%'.$name.'%')
-                                ->where('color','LIKE','%'.$color.'%')
-                                ->when($fromDate, function ($query, $fromDate){
-                                    return $query->whereDate('created_at','>=',$fromDate);
-                                })
-                                ->when($toDate, function ($query, $toDate){
-                                    return $query->whereDate('created_at','<=',$toDate);
-                                })
-                                ->paginate(5);
+        $listFlowers = Flower::where('name','LIKE','%'.$request->input('name').'%')
+            ->where('color','LIKE','%'.$request->input('color').'%')
+            ->when($fromDate, function ($query, $fromDate){
+                return $query->whereDate('created_at','>=',$fromDate);
+            })
+            ->when($toDate, function ($query, $toDate){
+                return $query->whereDate('created_at','<=',$toDate);
+            })
+            ->paginate(5);
         return response($listFlowers, 200);
     }
 

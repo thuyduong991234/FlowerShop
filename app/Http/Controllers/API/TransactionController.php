@@ -17,16 +17,11 @@ class TransactionController extends Controller
      */
     public function index(Request $request)
     {
-        //
-        $status = $request->input('status');
-        $customerLastName = $request->input('lastName');
-        $customerFirstName = $request->input('firstName');
         $fromDate = $request->input('fromDate');
         $toDate = $request->input('toDate');
-
-        $listTransactions = Transaction::where('status','LIKE','%'.$status.'%')
-            ->where('customer_last_name','LIKE','%'.$customerLastName.'%')
-            ->where('customer_first_name','LIKE','%'.$customerFirstName.'%')
+        $listTransactions = Transaction::where('status','LIKE','%'.$request->input('status').'%')
+            ->where('customer_last_name','LIKE','%'.$request->input('lastName').'%')
+            ->where('customer_first_name','LIKE','%'.$request->input('firstName').'%')
             ->when($fromDate, function ($query, $fromDate){
                 return $query->whereDate('created_at','>=',$fromDate);
             })
