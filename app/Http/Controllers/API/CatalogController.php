@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Catalog;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\FlowerRequestPatch;
-use App\Http\Requests\FlowerRequestPost;
-use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\CatalogRequestPost;
+use App\Http\Requests\CatalogRequestPut;
 use Illuminate\Http\Request;
-use App\Flower;
 
-class FlowerController extends Controller
+class CatalogController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -20,20 +19,22 @@ class FlowerController extends Controller
     {
         //
         $name = $request->input('name');
-        $color = $request->input('color');
+        $parent_id = $request->input('parentID');
         $fromDate = $request->input('fromDate');
         $toDate = $request->input('toDate');
 
-        $listFlowers = Flower::where('name','LIKE','%'.$name.'%')
-                                ->where('color','LIKE','%'.$color.'%')
-                                ->when($fromDate, function ($query, $fromDate){
-                                    return $query->whereDate('created_at','>=',$fromDate);
-                                })
-                                ->when($toDate, function ($query, $toDate){
-                                    return $query->whereDate('created_at','<=',$toDate);
-                                })
-                                ->paginate(5);
-        return response($listFlowers, 200);
+        $listCatalogs = Catalog::where('name','LIKE','%'.$name.'%')
+            ->when($parent_id, function ($query, $parent_id){
+                return $query->where('parent_id','LIKE','%'.$parent_id.'%');
+            })
+            ->when($fromDate, function ($query, $fromDate){
+                return $query->whereDate('created_at','>=',$fromDate);
+            })
+            ->when($toDate, function ($query, $toDate){
+                return $query->whereDate('created_at','<=',$toDate);
+            })
+            ->paginate(5);
+        return response($listCatalogs, 200);
     }
 
     /**
@@ -42,15 +43,12 @@ class FlowerController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(FlowerRequestPost $request)
+    public function store(CatalogRequestPost $request)
     {
         //
-        //$request->validated();
-
-        Flower::create($request->all());
+        Catalog::create($request->all());
 
         return response('Saved successfully', 201);
-
     }
 
     /**
@@ -59,10 +57,10 @@ class FlowerController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Flower $flower)
+    public function show(Catalog $catalog)
     {
         //
-        return response($flower, 200);
+        return response($catalog, '200');
     }
 
     /**
@@ -72,10 +70,10 @@ class FlowerController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(FlowerRequestPatch $request, Flower $flower)
+    public function update(CatalogRequestPut $request, Catalog $catalog)
     {
         //
-        $flower->update($request->all());
+        $catalog->update($request->all());
         return response('Updated successfully', 200);
     }
 
@@ -85,10 +83,10 @@ class FlowerController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Flower $flower)
+    public function destroy(Catalog $catalog)
     {
         //
-        $flower->delete();
+        $catalog->delete();
         return response('Deleted successfully', 204);
     }
 }

@@ -19,7 +19,7 @@ class CreateTransactionFlowersTable extends Migration
             $table->uuid('flower_id')->references('id')->on('flowers')->onDelete('cascade');
             $table->integer('qty');
             $table->double('amount',8,2);
-            $table->text('data');
+            $table->text('data')->nullable(true);
             $table->tinyInteger('status');
             $table->timestamps();
         });

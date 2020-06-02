@@ -31,7 +31,7 @@ class Flower extends Model
         return $this->belongsTo('App\Catalog', 'catalog_id', 'id');
     }
 
-    public function transactions()
+    public function transaction()
     {
         return $this->belongsToMany('App\Transaction')->using('App\Transaction_flower');
     }
