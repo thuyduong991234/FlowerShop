@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests;
 
-
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -26,6 +25,7 @@ class CustomerRequestPut extends FormRequest
     public function rules()
     {
         return [
+            //
             'last_name' => 'required|max:191',
             'first_name' => 'required|max:191',
             'email' => [

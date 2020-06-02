@@ -24,6 +24,7 @@ class TransactionRequestPost extends FormRequest
     public function rules()
     {
         return [
+            //
             'status' => 'required|boolean',
             'customer_id' => 'nullable|exists:customers,id',
             'customer_last_name' => 'required|max:191',

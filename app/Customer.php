@@ -28,7 +28,7 @@ class Customer extends Model
         'id' => 'string'
     ];
 
-    public function transaction()
+    public function transactions()
     {
         return $this->hasMany("App\Transaction");
     }

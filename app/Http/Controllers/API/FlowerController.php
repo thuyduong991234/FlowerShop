@@ -5,7 +5,6 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\FlowerRequestPatch;
 use App\Http\Requests\FlowerRequestPost;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Flower;
 
@@ -62,7 +61,7 @@ class FlowerController extends Controller
     public function show(Flower $flower)
     {
         //
-        return response($flower, 200);
+        return response($flower, 201);
     }
 
     /**

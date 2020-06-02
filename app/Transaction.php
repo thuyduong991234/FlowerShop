@@ -33,7 +33,7 @@ class Transaction extends Model
         return $this->belongsTo('App\Customer','customer_id','id');
     }
 
-    public function flower()
+    public function flowers()
     {
         return $this->belongsToMany('App\Flower')->using('App\Transaction_flower');
     }
