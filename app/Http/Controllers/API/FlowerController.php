@@ -62,7 +62,7 @@ class FlowerController extends Controller
     public function show(Flower $flower)
     {
         //
-        return response($flower, 200);
+        return response($flower, 201);
     }
 
     /**

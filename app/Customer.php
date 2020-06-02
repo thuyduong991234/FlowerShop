@@ -9,14 +9,6 @@ class Customer extends Model
 {
     //
     public $incrementing = false;
-    protected $fillable = [
-        'last_name',
-        'first_name',
-        'email',
-        'password',
-        'address',
-        'phone'
-    ];
     protected static function boot() {
         parent::boot();
         static::creating(function ($customer) {
@@ -28,7 +20,7 @@ class Customer extends Model
         'id' => 'string'
     ];
 
-    public function transaction()
+    public function transactions()
     {
         return $this->hasMany("App\Transaction");
     }

@@ -24,8 +24,8 @@ class CreateTransactionsTable extends Migration
             $table->double('amount',8,2);
             $table->string('payment_method');
             $table->text('payment_info');
-            $table->string('message')->nullable(true);
-            $table->string('security')->nullable(true);
+            $table->string('message');
+            $table->string('security');
             $table->timestamps();
         });
     }

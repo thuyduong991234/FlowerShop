@@ -9,19 +9,6 @@ class Transaction extends Model
 {
     //
     public $incrementing = false;
-    protected $fillable = [
-        'status',
-        'customer_id',
-        'customer_last_name',
-        'customer_first_name',
-        'customer_email',
-        'customer_phone',
-        'amount',
-        'payment_method',
-        'payment_info',
-        'message',
-        'security',
-    ];
     protected static function boot() {
         parent::boot();
         static::creating(function ($post) {
@@ -33,7 +20,7 @@ class Transaction extends Model
         return $this->belongsTo('App\Customer','customer_id','id');
     }
 
-    public function flower()
+    public function flowers()
     {
         return $this->belongsToMany('App\Flower')->using('App\Transaction_flower');
     }
