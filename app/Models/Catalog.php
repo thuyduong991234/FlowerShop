@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Traits\UtilTrait;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Str;
 
 class Catalog extends Model
@@ -11,6 +12,7 @@ class Catalog extends Model
     //
     use UtilTrait;
     public $incrementing = false;
+    protected $table = 'catalogs';
     protected $with = ['flowers:id,catalog_id,name'];
     protected $appends = ['sum_flower_view'];
 
@@ -21,7 +23,7 @@ class Catalog extends Model
 
     public function flowers()
     {
-        return $this->hasMany("App\Models\Flower");
+        return $this->hasMany(Flower::class);
     }
 
     public function getSumFlowerViewAttribute()

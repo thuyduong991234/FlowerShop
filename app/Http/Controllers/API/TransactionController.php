@@ -53,7 +53,7 @@ class TransactionController extends Controller
      */
     public function show(Transaction $transaction)
     {
-        //
+        //return $transaction->flowers;
         return response($transaction, 200);
     }
 

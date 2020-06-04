@@ -12,6 +12,7 @@ class Customer extends Model
     //
     use UtilTrait;
     public $incrementing = false;
+    protected $table = 'customers';
     protected $fillable = [
         'last_name',
         'first_name',
@@ -31,7 +32,7 @@ class Customer extends Model
 
     public function transactions()
     {
-        return $this->hasMany("App\Models\Transaction");
+        return $this->hasMany(Transaction::class);
     }
 
     public function getFullNameAttribute()

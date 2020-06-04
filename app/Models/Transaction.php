@@ -11,6 +11,7 @@ class Transaction extends Model
     //
     use UtilTrait;
     public $incrementing = false;
+    protected $table = 'transactions';
     protected $fillable = [
         'status',
         'customer_id',
@@ -24,16 +25,16 @@ class Transaction extends Model
         'message',
         'security',
     ];
-    protected $with = ['flowers'];
+    //protected $with = ['flowers'];
 
 
     public function customer() {
-        return $this->belongsTo('App\Models\Customer','customer_id','id');
+        return $this->belongsTo(Customer::class,'customer_id','id');
     }
 
     public function flowers()
     {
-        return $this->belongsToMany('App\Models\Flower','App\Models\TransactionFlower', 'transaction_id', 'flower_id');
+        return $this->belongsToMany(Flower::class,'transaction_flower', 'transaction_id', 'flower_id');
     }
 }
 

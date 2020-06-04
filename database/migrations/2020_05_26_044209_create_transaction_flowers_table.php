@@ -15,11 +15,13 @@ class CreateTransactionFlowersTable extends Migration
     {
         Schema::create('transaction_flower', function (Blueprint $table) {
             $table->id();
-            $table->uuid('transaction_id')->references('id')->on('transactions')->onDelete('cascade');
-            $table->uuid('flower_id')->references('id')->on('flowers')->onDelete('cascade');
+            $table->uuid('transaction_id');
+            $table->foreign('transaction_id')->references('id')->on('transactions')->onDelete('cascade');
+            $table->uuid('flower_id');
+            $table->foreign('flower_id')->references('id')->on('flowers')->onDelete('cascade');
             $table->integer('qty');
             $table->double('amount',8,2);
-            $table->text('data')->nullable(true);
+            $table->text('data')->nullable();
             $table->tinyInteger('status');
             $table->timestamps();
         });

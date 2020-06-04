@@ -18,7 +18,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::apiResource('flowers','API\FlowerController');
-Route::apiResource('customers','API\CustomerController');
-Route::apiResource('catalogs','API\CatalogController');
-Route::apiResource('transactions','API\TransactionController');
+Route::namespace('API')->group(function (){
+    Route::apiResource('flowers','FlowerController');
+    Route::apiResource('customers','CustomerController');
+    Route::apiResource('catalogs','CatalogController');
+    Route::apiResource('transactions','TransactionController');
+});

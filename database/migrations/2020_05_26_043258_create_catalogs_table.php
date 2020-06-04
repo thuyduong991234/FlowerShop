@@ -14,7 +14,7 @@ class CreateCatalogsTable extends Migration
     public function up()
     {
         Schema::create('catalogs', function (Blueprint $table) {
-            $table->uuid('id')->primary();
+            $table->uuid('id')->index()->unique();
             $table->string('name');
             $table->uuid('parent_id')->nullable();
             $table->timestamps();

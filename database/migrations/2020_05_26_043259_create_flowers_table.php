@@ -14,15 +14,16 @@ class CreateFlowersTable extends Migration
     public function up()
     {
         Schema::create('flowers', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->uuid('catalog_id')->references('id')->on('catalogs')->onDelete('cascade');
+            $table->uuid('id')->index()->unique();
+            $table->uuid('catalog_id');
+            $table->foreign('catalog_id')->references('id')->on('catalogs')->onDelete('cascade');
             $table->string('name');
-            $table->string('color')->nullable(true);
-            $table->double('price', 8,2)->nullable(true);
-            $table->integer('discount')->nullable(true);
-            $table->string('avatar')->nullable(true);
-            $table->text('images')->nullable(true);
-            $table->integer('view')->nullable(true);
+            $table->string('color')->nullable();
+            $table->double('price', 8,2)->nullable();
+            $table->integer('discount')->nullable();
+            $table->string('avatar')->nullable();
+            $table->text('images')->nullable();
+            $table->integer('view')->nullable();
             $table->timestamps();
         });
     }

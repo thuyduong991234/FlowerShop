@@ -11,6 +11,7 @@ class Flower extends Model
     //
     use UtilTrait;
     public $incrementing = false;
+    protected $table = 'flowers';
     protected $fillable = [
         'catalog_id',
         'name',
@@ -25,11 +26,11 @@ class Flower extends Model
 
     public function catalog()
     {
-        return $this->belongsTo('App\Models\Catalog', 'catalog_id', 'id');
+        return $this->belongsTo(Catalog::class, 'catalog_id', 'id');
     }
 
     public function transactions()
     {
-        return $this->belongsToMany('App\Models\Transaction', 'App\Models\TransactionFlower', 'flower_id', 'transaction_id');
+        return $this->belongsToMany(Transaction::class, 'transaction_flower', 'flower_id', 'transaction_id');
     }
 }
