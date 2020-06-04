@@ -12,6 +12,6 @@ class FlowerSeeder extends Seeder
     public function run()
     {
         //
-        factory(App\Flower::class, 5)->create();
+        factory(App\Models\Flower::class, 5)->create();
     }
 }

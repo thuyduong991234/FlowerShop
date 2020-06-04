@@ -2,11 +2,11 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\Model;
+use App\Models\Admin;
 use Faker\Generator as Faker;
 use Illuminate\Support\Facades\Hash;
 
-$factory->define(\App\Admin::class, function (Faker $faker) {
+$factory->define(Admin::class, function (Faker $faker) {
     return [
         //
         'last_name' => $faker->lastName,

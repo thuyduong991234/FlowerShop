@@ -16,7 +16,7 @@ class DatabaseSeeder extends Seeder
             CatalogSeeder::class,
             FlowerSeeder::class,
             TransactionSeeder::class,
-            Transaction_flowerSeeder::class
+            TransactionFlowerSeeder::class
         ]);
     }
 }

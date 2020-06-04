@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Customer;
+use App\Models\Customer;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CustomerRequestPost;
 use App\Http\Requests\CustomerRequestPut;

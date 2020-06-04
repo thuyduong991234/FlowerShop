@@ -1,13 +1,15 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
+use App\Traits\UtilTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
 class Flower extends Model
 {
     //
+    use UtilTrait;
     public $incrementing = false;
     protected $fillable = [
         'catalog_id',
@@ -19,20 +21,15 @@ class Flower extends Model
         'images',
         'view'
     ];
-    protected static function boot() {
-        parent::boot();
-        static::creating(function ($flower) {
-            $flower->{$flower->getKeyName()} = (string) Str::uuid();
-        });
-    }
+    //protected $with = ['transactions'];
 
     public function catalog()
     {
-        return $this->belongsTo('App\Catalog', 'catalog_id', 'id');
+        return $this->belongsTo('App\Models\Catalog', 'catalog_id', 'id');
     }
 
     public function transactions()
     {
-        return $this->belongsToMany('App\Transaction')->using('App\Transaction_flower');
+        return $this->belongsToMany('App\Models\Transaction', 'App\Models\TransactionFlower', 'flower_id', 'transaction_id');
     }
 }

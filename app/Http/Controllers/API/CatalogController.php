@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Catalog;
+use App\Models\Catalog;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CatalogRequestPost;
 use App\Http\Requests\CatalogRequestPut;
@@ -57,6 +57,7 @@ class CatalogController extends Controller
     public function show(Catalog $catalog)
     {
         //
+        //return response($catalog->load('flowers:id,name'), '200');
         return response($catalog, '200');
     }
 

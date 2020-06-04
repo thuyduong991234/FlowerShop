@@ -1,7 +1,8 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
+use App\Traits\UtilTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -9,6 +10,7 @@ use Illuminate\Support\Str;
 class Customer extends Model
 {
     //
+    use UtilTrait;
     public $incrementing = false;
     protected $fillable = [
         'last_name',
@@ -20,12 +22,8 @@ class Customer extends Model
     ];
 
     protected $appends = ['full_name'];
-    protected static function boot() {
-        parent::boot();
-        static::creating(function ($customer) {
-            $customer->{$customer->getKeyName()} = (string) Str::uuid();
-        });
-    }
+    protected $with = ['transactions'];
+
 
     protected $casts = [
         'id' => 'string'
@@ -33,7 +31,7 @@ class Customer extends Model
 
     public function transactions()
     {
-        return $this->hasMany("App\Transaction");
+        return $this->hasMany("App\Models\Transaction");
     }
 
     public function getFullNameAttribute()

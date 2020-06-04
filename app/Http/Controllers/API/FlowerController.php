@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\FlowerRequestPatch;
 use App\Http\Requests\FlowerRequestPost;
 use Illuminate\Http\Request;
-use App\Flower;
+use App\Models\Flower;
 
 class FlowerController extends Controller
 {
@@ -27,6 +27,7 @@ class FlowerController extends Controller
             ->when($toDate, function ($query, $toDate){
                 return $query->whereDate('created_at','<=',$toDate);
             })
+            //->with('catalog:id,name')
             ->paginate(5);
         return response($listFlowers, 200);
     }

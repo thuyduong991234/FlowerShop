@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-class Transaction_flowerSeeder extends Seeder
+class TransactionFlowerSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -12,6 +12,6 @@ class Transaction_flowerSeeder extends Seeder
     public function run()
     {
         //
-        factory(App\Transaction_flower::class, 5)->create();
+        factory(App\Models\TransactionFlower::class, 5)->create();
     }
 }

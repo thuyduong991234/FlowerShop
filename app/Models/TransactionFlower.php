@@ -1,11 +1,11 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Support\Str;
 
-class Transaction_flower extends Pivot
+class TransactionFlower extends Pivot
 {
     //
 }

@@ -2,11 +2,11 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\Model;
+use App\Models\Customer;
 use Faker\Generator as Faker;
 use Illuminate\Support\Facades\Hash;
 
-$factory->define(\App\Customer::class, function (Faker $faker) {
+$factory->define(Customer::class, function (Faker $faker) {
     return [
         //
         'last_name' => $faker->lastName,
