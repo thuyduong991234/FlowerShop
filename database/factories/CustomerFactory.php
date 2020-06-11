@@ -12,7 +12,7 @@ $factory->define(Customer::class, function (Faker $faker) {
         'last_name' => $faker->lastName,
         'first_name' => $faker->firstName,
         'email' => $faker->safeEmail,
-        'password' => Hash::make('hello'),
+        'password' => "hello",
         'address' => $faker->address,
         'phone' => $faker->phoneNumber,
     ];

@@ -11,7 +11,7 @@ $factory->define(Admin::class, function (Faker $faker) {
         //
         'last_name' => $faker->lastName,
         'first_name' => $faker->firstName,
-        'username' => $faker->userName,
-        'password' => Hash::make('hello'),
+        'email' => $faker->safeEmail,
+        'password' => "hello",
     ];
 });

@@ -4,13 +4,17 @@ namespace App\Models;
 
 use App\Traits\UtilTrait;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class Customer extends Model
+class Customer extends Authenticatable implements JWTSubject
 {
     //
     use UtilTrait;
+
+    protected $guard = 'customer';
     public $incrementing = false;
     protected $table = 'customers';
     protected $fillable = [
@@ -23,7 +27,7 @@ class Customer extends Model
     ];
 
     protected $appends = ['full_name'];
-    protected $with = ['transactions'];
+    //protected $with = ['transactions'];
 
 
     protected $casts = [
@@ -43,5 +47,25 @@ class Customer extends Model
     public function setPasswordAttribute($password)
     {
         $this->attributes['password'] = Hash::make($password);
+    }
+
+    /**
+     * Get the identifier that will be stored in the subject claim of the JWT.
+     *
+     * @return mixed
+     */
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    /**
+     * Return a key value array, containing any custom claims to be added to the JWT.
+     *
+     * @return array
+     */
+    public function getJWTCustomClaims()
+    {
+        return [];
     }
 }

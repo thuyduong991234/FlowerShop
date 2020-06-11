@@ -6,14 +6,24 @@ use App\Models\Catalog;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CatalogRequestPost;
 use App\Http\Requests\CatalogRequestPut;
+use App\Transformers\CatalogTransformer;
 use Illuminate\Http\Request;
+use League\Fractal\Manager;
+use League\Fractal\Resource\Collection;
 
 class CatalogController extends Controller
 {
+    private $fractal;
+
+    function __construct(Manager $fractal)
+    {
+        $this->fractal = $fractal;
+    }
+
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return
      */
     public function index(Request $request)
     {
@@ -31,34 +41,46 @@ class CatalogController extends Controller
                 return $query->whereDate('created_at','<=',$toDate);
             })
             ->paginate(5);
-        return response($listCatalogs, 200);
+        //dd($listCatalogs);
+        //return $this->fractal->createData(new Collection($listCatalogs,new CatalogTransformer()))->toArray();
+
+        //1
+        /*return responder()->success($listCatalogs->map(function ($catalog) {
+            return ['id' => $catalog->id, 'name' => $catalog->name];
+        })
+        )->respond();*/
+
+        //$listCatalogs = (new CatalogTransformer())->getCatalogCollection($listCatalogs);
+        //return $listCatalogs;
+        //2
+        return responder()->success($listCatalogs, CatalogTransformer::class)->with('flowers')->respond();
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return
      */
     public function store(CatalogRequestPost $request)
     {
         //
         Catalog::create($request->all());
 
-        return response('Saved successfully', 201);
+        return responder()->success()->respond();
     }
 
     /**
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return
      */
     public function show(Catalog $catalog)
     {
         //
         //return response($catalog->load('flowers:id,name'), '200');
-        return response($catalog, '200');
+        return responder()->success($catalog, CatalogTransformer::class)->with('flowers')->respond();
     }
 
     /**
@@ -66,25 +88,25 @@ class CatalogController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return
      */
     public function update(CatalogRequestPut $request, Catalog $catalog)
     {
         //
         $catalog->update($request->all());
-        return response('Updated successfully', 200);
+        return responder()->success()->respond();
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return
      */
     public function destroy(Catalog $catalog)
     {
         //
         $catalog->delete();
-        return response('Deleted successfully', 204);
+        return responder()->success()->respond();
     }
 }

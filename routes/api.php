@@ -14,13 +14,17 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+
 
 Route::namespace('API')->group(function (){
-    Route::apiResource('flowers','FlowerController');
-    Route::apiResource('customers','CustomerController');
-    Route::apiResource('catalogs','CatalogController');
-    Route::apiResource('transactions','TransactionController');
+    Route::middleware(['auth:api,customer'])->group(function () {
+        //
+        Route::apiResource('flowers','FlowerController');
+        Route::apiResource('catalogs','CatalogController');
+        Route::apiResource('transactions','TransactionController');
+    });
+    Route::group(['middleware' => 'auth:api'], function (){
+        Route::apiResource('customers','CustomerController');
+    });
+
 });

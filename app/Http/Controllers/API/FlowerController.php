@@ -5,15 +5,18 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\FlowerRequestPatch;
 use App\Http\Requests\FlowerRequestPost;
+use App\Transformers\FlowerTransformer;
+use Flugg\Responder\TransformBuilder;
 use Illuminate\Http\Request;
 use App\Models\Flower;
+use Illuminate\Support\Collection;
 
 class FlowerController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return
      */
     public function index(Request $request)
     {
@@ -27,9 +30,9 @@ class FlowerController extends Controller
             ->when($toDate, function ($query, $toDate){
                 return $query->whereDate('created_at','<=',$toDate);
             })
-            //->with('catalog:id,name')
             ->paginate(5);
-        return response($listFlowers, 200);
+        //return response($listFlowers, 200);
+        return responder()->success($listFlowers, FlowerTransformer::class)->with('catalog')->respond();
     }
 
     /**
@@ -53,12 +56,12 @@ class FlowerController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return
      */
     public function show(Flower $flower)
     {
         //
-        return response($flower, 201);
+        return responder()->success($flower, FlowerTransformer::class)->with('catalog')->respond();
     }
 
     /**

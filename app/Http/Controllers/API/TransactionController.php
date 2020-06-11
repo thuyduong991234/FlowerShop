@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\TransactionRequestPost;
 use App\Http\Requests\TransactionRequestPut;
 use App\Models\Transaction;
+use App\Transformers\TransactionTransformer;
 use Illuminate\Http\Request;
 
 class TransactionController extends Controller
@@ -13,7 +14,7 @@ class TransactionController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return
      */
     public function index(Request $request)
     {
@@ -29,7 +30,8 @@ class TransactionController extends Controller
                 return $query->whereDate('created_at','<=',$toDate);
             })
             ->paginate(5);
-        return response($listTransactions, 200);
+        //return response($listTransactions, 200);
+        return responder()->success($listTransactions, TransactionTransformer::class)->with(['flowers','customer'])->respond();
     }
 
     /**
@@ -49,12 +51,12 @@ class TransactionController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return
      */
     public function show(Transaction $transaction)
     {
         //return $transaction->flowers;
-        return response($transaction, 200);
+        return responder()->success($transaction, TransactionTransformer::class)->with(['flowers','customer'])->respond();
     }
 
     /**

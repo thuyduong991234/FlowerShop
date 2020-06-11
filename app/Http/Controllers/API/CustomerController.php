@@ -6,6 +6,7 @@ use App\Models\Customer;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CustomerRequestPost;
 use App\Http\Requests\CustomerRequestPut;
+use App\Transformers\CustomerTransformer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -14,7 +15,7 @@ class CustomerController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return
      */
     public function index(Request $request)
     {
@@ -29,7 +30,8 @@ class CustomerController extends Controller
                 return $query->whereDate('created_at','<=',$toDate);
             })
             ->paginate(5);
-        return response($listCustomers, 200);
+        //return response($listCustomers, 200);
+        return responder()->success($listCustomers, CustomerTransformer::class)->with('transactions')->respond();
     }
 
     /**
@@ -54,12 +56,13 @@ class CustomerController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return
      */
     public function show(Customer $customer)
     {
         //
-        return response($customer, 200);
+        //dd($customer);
+        return responder()->success($customer, CustomerTransformer::class)->with('transactions')->respond();
     }
 
     /**

@@ -13,7 +13,7 @@ class Catalog extends Model
     use UtilTrait;
     public $incrementing = false;
     protected $table = 'catalogs';
-    protected $with = ['flowers:id,catalog_id,name'];
+    //protected $with = ['flowers:id,catalog_id,name'];
     protected $appends = ['sum_flower_view'];
 
     protected $fillable = [
