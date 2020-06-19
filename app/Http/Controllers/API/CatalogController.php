@@ -57,6 +57,17 @@ class CatalogController extends Controller
     }
 
     /**
+     * Display a listing of the resource.
+     *
+     * @return
+     */
+    public function getAll()
+    {
+        $list = Catalog::all();
+        return response(['data' => $list]);
+    }
+
+    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request

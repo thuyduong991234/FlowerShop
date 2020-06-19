@@ -17,14 +17,22 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::namespace('API')->group(function (){
-    Route::middleware(['auth:api,customer'])->group(function () {
+    //Route::middleware(['check.token'])->group(function () {
         //
         Route::apiResource('flowers','FlowerController');
         Route::apiResource('catalogs','CatalogController');
         Route::apiResource('transactions','TransactionController');
-    });
-    Route::group(['middleware' => 'auth:api'], function (){
+    //});
+
+    //Route::middleware(['check.token','check.role:api'])->group(function () {
+        //
         Route::apiResource('customers','CustomerController');
-    });
+    //});
 
 });
+Route::get('get-catalogs','API\CatalogController@getAll')->name('catalogs.getall');
+
+Route::post('admin/login','Admin\LoginController@login')->name('admin.login');
+Route::post('admin/logout','Admin\LoginController@logout')->name('admin.logout');
+Route::post('customer/login','Customer\LoginController@login')->name('customer.login');
+Route::post('customer/logout','Customer\LoginController@logout')->name('customer.logout');

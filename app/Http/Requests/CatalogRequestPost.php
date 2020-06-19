@@ -25,7 +25,7 @@ class CatalogRequestPost extends FormRequest
     {
         return [
             'name' => 'required|max:191',
-            'parent_id' => 'exists:catalogs,id',
+            'parent_id' => 'nullable|exists:catalogs,id',
         ];
     }
 
