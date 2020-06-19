@@ -1,7 +1,7 @@
 $(document).ready(function () {
-    var listCatalog = [];
+    var listFlower = [];
     var listAll = [];
-    var catalog_id = "";
+    var flower_id = "";
     var name = "";
     var page = 1;
     var row, isNew;
@@ -29,7 +29,7 @@ $(document).ready(function () {
             }
         });
         $.ajax({
-            url: 'api/catalogs',
+            url: 'api/flowers',
             type: 'GET',
             data:{
                 'name': name,
@@ -48,10 +48,10 @@ $(document).ready(function () {
                 window.history.pushState( {} , '', url);
 
                 //set data
-                listCatalog = msg.data;
+                listFlower = msg.data;
                 //
                 msg.data.forEach(function (item, index) {
-                    $('#tbCatalog > tbody').append('<tr>' +
+                    $('#tbFlower > tbody').append('<tr>' +
                         `<th scope="row">` + index + `</th>
                         <td>
                         <i class="fas fa-trash-alt" style="color: red" name = "btnDelete" data-toggle="modal" data-target="#modalDelete"></i>
@@ -60,8 +60,14 @@ $(document).ready(function () {
                         <i class="fas fa-user-edit" style="color: #293c74" name = "btnEdit" data-toggle="modal" data-target="#modalDetailItem"></i>
                         </td><td>` +
                         item.id + '</td><td>' +
+                        item.catalog_id + '</td><td>' +
                         item.name + '</td><td>' +
-                        item.parent_id + '</td><td>' +
+                        item.color + '</td><td>' +
+                        item.price + '</td><td>' +
+                        item.discount + '</td><td>' +
+                        item.avatar + '</td><td>' +
+                        item.images + '</td><td>' +
+                        item.view + '</td><td>' +
                         item.created_at + '</td><td>' +
                         item.updated_at + '</td></tr>');
                 })
@@ -72,15 +78,15 @@ $(document).ready(function () {
                 //delete
                 $('[name=btnDelete]').click(function() {
                     var row = $(this).closest("tr")[0];
-                    catalog_id = row.cells[3].innerText;
-                    console.log(catalog_id);
+                    flower_id = row.cells[3].innerText;
+                    console.log(flower_id);
                 })
 
                 //edit
                 $('[name=btnEdit]').click(function() {
                     isNew = false;
                     row = $(this).closest("tr")[0];
-                    catalog_id = row.cells[3].innerText;
+                    flower_id = row.cells[3].innerText;
                     //console.log(row.cells[4].innerText);
                 })
             },
@@ -130,8 +136,8 @@ $(document).ready(function () {
             {
                 $('#ul-pagination').append(`<li class="page-item active" aria-current="page">
                                             <a class="page-link">`
-                                            + i +
-                                            `<a class="sr-only">(current)</a>
+                    + i +
+                    `<a class="sr-only">(current)</a>
                                              </a>
                                              </li>`);
             }
@@ -191,38 +197,47 @@ $(document).ready(function () {
                         }
                         window.history.pushState( {} , '', url);
 
-                        $('#tbCatalog > tbody').children().remove();
-                        listCatalog = msg.data;
+                        $('#tbFlower > tbody').children().remove();
+                        listFlower = msg.data;
                         //
                         msg.data.forEach(function (item, index) {
-                            $('#tbCatalog > tbody').append('<tr>' +
+                            $('#tbFlower > tbody').append('<tr>' +
                                 `<th scope="row">` + index + `</th>
                         <td>
                         <i class="fas fa-trash-alt" style="color: red" name = "btnDelete" data-toggle="modal" data-target="#modalDelete"></i>
                         </td>
-                        <td>
+                        <td >
                         <i class="fas fa-user-edit" style="color: #293c74" name = "btnEdit" data-toggle="modal" data-target="#modalDetailItem"></i>
                         </td><td>` +
                                 item.id + '</td><td>' +
+                                item.catalog_id + '</td><td>' +
                                 item.name + '</td><td>' +
-                                item.parent_id + '</td><td>' +
+                                item.color + '</td><td>' +
+                                item.price + '</td><td>' +
+                                item.discount + '</td><td>' +
+                                item.avatar + '</td><td>' +
+                                item.images + '</td><td>' +
+                                item.view + '</td><td>' +
                                 item.created_at + '</td><td>' +
                                 item.updated_at + '</td></tr>');
                         })
 
                         //pagination
                         customPagination(msg);
+
+                        //delete
                         $('[name=btnDelete]').click(function() {
                             var row = $(this).closest("tr")[0];
-                            catalog_id = row.cells[3].innerText;
-                            console.log(catalog_id);
+                            flower_id = row.cells[3].innerText;
+                            console.log(flower_id);
                         })
 
+                        //edit
                         $('[name=btnEdit]').click(function() {
                             isNew = false;
                             row = $(this).closest("tr")[0];
-                            catalog_id = row.cells[3].innerText;
-                            console.log(catalog_id);
+                            flower_id = row.cells[3].innerText;
+                            //console.log(row.cells[4].innerText);
                         })
                     },
                     error: function(xhr) {
@@ -236,176 +251,4 @@ $(document).ready(function () {
         }
     }
 
-    //modal add new items
-    $('#modalDetailItem').on('show.bs.modal', function (event) {
-        //clear text
-        $('#catalog-name').val('');
-        $("#noteName").css({display: "none"});
-        $("#message-note-name").text("");
-        $('#select-parent-id').children().remove();
-
-        //set data to select option
-        $('#select-parent-id').append('<option value=" " selected="selected">Không có</option>');
-        listAll.forEach(function (item) {
-            $('#select-parent-id').append(`<option value="${item.id}"> 
-                                       ${item.name} 
-                                  </option>`);
-        })
-        if(isNew == false)
-        {
-            console.log(row.cells[5].innerText);
-            $('#catalog-name').val(row.cells[4].innerText);
-            $('#select-parent-id').val(row.cells[5].innerText == "null" ? " " : row.cells[5].innerText);
-        }
-    })
-
-    $('#btnAdd').click(function () {
-        isNew = true;
-    })
-    
-    //add item
-    $('#btnSave').click(function () {
-        //console.log('parent_id: ' + $('#select-parent-id').children("option:selected").val());
-        if(isNew == true)
-        {
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-            $.ajax({
-                url: 'api/catalogs',
-                type: 'POST',
-                data: {
-                    name: $('#catalog-name').val(),
-                    parent_id: $('#select-parent-id').children("option:selected").val(),
-                },
-                success: function( msg ) {
-                    $('#modalDetailItem').modal('toggle');
-                    $('#add-success').css({display: "block"});
-                    setTimeout(function(){location.reload()}, 2000);
-                },
-                error: function(xhr) {
-                    var err = JSON.parse(xhr.responseText);
-                    if(err.errors.name)
-                    {
-                        $("#noteName").css({display: "block"});
-                        $("#message-note-name").text(err.errors.name[0]);
-                    }
-                    console.log(err.errors.name[0]);
-                }
-            })
-        }
-        else
-        {
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-            $.ajax({
-                url: 'api/catalogs/' + catalog_id,
-                type: 'PUT',
-                data: {
-                    name: $('#catalog-name').val(),
-                    parent_id: $('#select-parent-id').children("option:selected").val(),
-                },
-                success: function( msg ) {
-                    $('#modalDetailItem').modal('toggle');
-                    $('#update-success').css({display: "block"});
-                    setTimeout(function(){location.reload()}, 2000);
-                },
-                error: function(xhr) {
-                    var err = JSON.parse(xhr.responseText);
-                    if(err.errors.name)
-                    {
-                        $("#noteName").css({display: "block"});
-                        $("#message-note-name").text(err.errors.name[0]);
-                    }
-                    console.log(err.errors.name[0]);
-                }
-            })
-        }
-    })
-
-    $('#btnOKDel').click(function () {
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-        $.ajax({
-            url: 'api/catalogs/' + catalog_id,
-            type: 'DELETE',
-            success: function( msg ) {
-                $('#modalDelete').modal('toggle');
-                $('#delete-success').css({display: "block"});
-                setTimeout(function(){location.reload()}, 2000);
-            },
-            error: function(xhr) {
-                console.log(xhr.responseText);
-            }
-        })
-    })
-
-    $('#btnSearch').click(function () {
-        name = $('#txtSearch').val();
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-        $.ajax({
-            url: 'api/catalogs',
-            type: 'GET',
-            data:{
-                'name': name
-            },
-            success: function( msg ) {
-                var url = window.location.protocol + "//" + window.location.host + window.location.pathname + "?name="+name + "&page=1";
-                window.history.pushState( {} , '', url);
-
-                //set data
-                $('#tbCatalog > tbody').children().remove();
-                listCatalog = msg.data;
-                //
-                msg.data.forEach(function (item, index) {
-                    $('#tbCatalog > tbody').append('<tr>' +
-                        `<th scope="row">` + index + `</th>
-                        <td>
-                        <i class="fas fa-trash-alt" style="color: red" name = "btnDelete" data-toggle="modal" data-target="#modalDelete"></i>
-                        </td>
-                        <td >
-                        <i class="fas fa-user-edit" style="color: #293c74" name = "btnEdit" data-toggle="modal" data-target="#modalDetailItem"></i>
-                        </td><td>` +
-                        item.id + '</td><td>' +
-                        item.name + '</td><td>' +
-                        item.parent_id + '</td><td>' +
-                        item.created_at + '</td><td>' +
-                        item.updated_at + '</td></tr>');
-                })
-
-                //pagination
-                customPagination(msg);
-
-                //delete
-                $('[name=btnDelete]').click(function() {
-                    var row = $(this).closest("tr")[0];
-                    catalog_id = row.cells[3].innerText;
-                    console.log(catalog_id);
-                })
-
-                //edit
-                $('[name=btnEdit]').click(function() {
-                    isNew = false;
-                    row = $(this).closest("tr")[0];
-                    catalog_id = row.cells[3].innerText;
-                    //console.log(row.cells[4].innerText);
-                })
-            },
-            error: function(xhr) {
-                console.log(xhr.responseText);
-            }
-        })
-    })
 })

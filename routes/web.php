@@ -17,4 +17,8 @@ Route::get('/catalogs', function () {
     return view('catalogs');
 });
 
+Route::get('/flowers', function () {
+    return view('flowers');
+});
+
 

@@ -21,15 +21,15 @@
 <body>
 <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
     <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">FLOWER SHOP</a>
-    <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search" id="txtSearch">
+    <input class="form-control form-control-dark w-100" type="text" placeholder="Search by name" aria-label="Search" id="txtSearch">
     <ul class="navbar-nav px-3">
         <li class="nav-item text-nowrap">
-            <a class="nav-link" id="btnSearch">Search</a>
+            <a class="nav-link btn" id="btnSearch">Search</a>
         </li>
     </ul>
     <ul class="navbar-nav px-3">
         <li class="nav-item text-nowrap">
-            <a class="nav-link" href="#">Sign out</a>
+            <a class="nav-link btn" href="#">Sign out</a>
         </li>
     </ul>
 </nav>
@@ -46,14 +46,14 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="{{url('/catalogs')}}">
+                        <a class="nav-link" href="{{url('/catalogs')}}" id="menuCatalog">
                             <span data-feather="file"></span>
                             Catalogs
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <span data-feather="shopping-cart"></span>
+                        <a class="nav-link" href="{{url('/flowers')}}" id="menuFlower">
+                            <span data-feather="star"></span>
                             Flowers
                         </a>
                     </li>
