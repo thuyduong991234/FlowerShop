@@ -44,12 +44,11 @@ class FlowerController extends Controller
      */
     public function store(FlowerRequestPost $request)
     {
-        //
+        /*
         //check file
         if($request->hasFile('avatar'))
         {
             //dd([$request->except(['avatar']), 'avatar' => "link"]);
-            /*
             //Way 1: stored path of avatar
             //stored image to folder avatars
             $avatarName = time() . '.' . $request->file('avatar')->getClientOriginalExtension();
@@ -58,20 +57,26 @@ class FlowerController extends Controller
             $flower->fill($request->except('avatar'));
             $flower->avatar = $link;
             $flower->save();
-            */
-
-            //Way 2
-
-            $flower = new Flower();
-            $flower->fill($request->except('avatar'));
-            $img = file_get_contents($request->file('avatar'));
-            $flower->avatar = base64_encode($img);
-            $flower->save();
-
 
             return responder()->success(['Saved successfully'])->respond();
 
         }
+        return responder()->error(["Don't have file"])->respond();
+        */
+
+        //Way 2
+        $base64 = $request->input('avatar');
+        $imgName = 'image_'.time().'.png';
+        if($base64 != ""){
+            $link = Storage::disk('public')->putFile("avatars/$imgName", base64_decode($base64), 'public');
+            $flower = new Flower();
+            $flower->fill($request->except('avatar'));
+            $flower->avatar = $link;
+            $flower->save();
+
+            return responder()->success(['Saved successfully'])->respond();
+        }
+
         return responder()->error(["Don't have file"])->respond();
     }
 

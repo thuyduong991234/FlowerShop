@@ -26,7 +26,7 @@ class FlowerRequestPost extends FormRequest
         return [
             'catalog_id' => 'required|exists:catalogs,id',
             'name' => 'required|max:191',
-            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg'
+            //'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg'
         ];
     }
 

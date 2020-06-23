@@ -64,8 +64,8 @@ $(document).ready(function () {
                         item.name + '</td><td>' +
                         item.color + '</td><td>' +
                         item.price + '</td><td>' +
-                        item.discount + '</td><td>' +
-                        item.avatar + '</td><td>' +
+                        item.discount + '</td><td>' + '<img src="data:image/png;base64,' +
+                        item.avatar + '" width="100" height="100"></td><td>' +
                         item.images + '</td><td>' +
                         item.view + '</td><td>' +
                         item.created_at + '</td><td>' +
