@@ -13,6 +13,6 @@ class AdminSeeder extends Seeder
     public function run()
     {
         //
-        factory(Admin::class, 50)->create();
+        factory(Admin::class, 5)->create();
     }
 }

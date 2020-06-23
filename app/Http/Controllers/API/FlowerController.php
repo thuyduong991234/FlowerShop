@@ -10,6 +10,7 @@ use Flugg\Responder\TransformBuilder;
 use Illuminate\Http\Request;
 use App\Models\Flower;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Storage;
 
 class FlowerController extends Controller
 {
@@ -39,17 +40,39 @@ class FlowerController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     *
      */
     public function store(FlowerRequestPost $request)
     {
         //
-        //$request->validated();
+        //check file
+        if($request->hasFile('avatar'))
+        {
+            //dd([$request->except(['avatar']), 'avatar' => "link"]);
+            /*
+            //Way 1: stored path of avatar
+            //stored image to folder avatars
+            $avatarName = time() . '.' . $request->file('avatar')->getClientOriginalExtension();
+            $link = $request->file('avatar')->storeAs('/avatars', $avatarName, 'public');
+            $flower = new Flower();
+            $flower->fill($request->except('avatar'));
+            $flower->avatar = $link;
+            $flower->save();
+            */
 
-        Flower::create($request->all());
+            //Way 2
 
-        return response('Saved successfully', 201);
+            $flower = new Flower();
+            $flower->fill($request->except('avatar'));
+            $img = file_get_contents($request->file('avatar'));
+            $flower->avatar = base64_encode($img);
+            $flower->save();
 
+
+            return responder()->success(['Saved successfully'])->respond();
+
+        }
+        return responder()->error(["Don't have file"])->respond();
     }
 
     /**

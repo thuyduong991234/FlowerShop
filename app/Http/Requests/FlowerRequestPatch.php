@@ -27,7 +27,7 @@ class FlowerRequestPatch extends FormRequest
             //
             'catalog_id' => 'exists:catalogs,id',
             'name' => 'sometimes|required|max:191',
-            'avatar' => 'nullable|url'
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg'
         ];
     }
 
@@ -36,8 +36,7 @@ class FlowerRequestPatch extends FormRequest
         return [
             'catalog_id.exists' => "Catalog_id don't exists!",
             'name.required' => "Name of the flower is required!",
-            'name.max:191' => "Max size of name is 191 characters!",
-            'avatar.url' => "Avatar must be a URL format!"
+            'name.max:191' => "Max size of name is 191 characters!"
         ];
     }
 }

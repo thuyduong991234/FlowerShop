@@ -41,7 +41,7 @@ class CatalogTransformer extends Transformer
         return $catalog->flowers->makehidden(['catalog_id','created_at','updated_at']);
     }
 
-    public function getCatalogCollection($listCatalog)
+    /*public function getCatalogCollection($listCatalog)
     {
         return $listCatalog->map(function ($catalog){
             return [
@@ -50,5 +50,5 @@ class CatalogTransformer extends Transformer
                 'flowers' => $catalog->flowers
             ];
         });
-    }
+    }*/
 }

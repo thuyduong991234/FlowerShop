@@ -21,8 +21,8 @@ class CreateFlowersTable extends Migration
             $table->string('color')->nullable();
             $table->double('price', 8,2)->nullable();
             $table->integer('discount')->nullable();
-            $table->string('avatar')->nullable();
-            $table->text('images')->nullable();
+            $table->longText('avatar')->nullable();
+            $table->longText('images')->nullable();
             $table->integer('view')->nullable();
             $table->timestamps();
         });
