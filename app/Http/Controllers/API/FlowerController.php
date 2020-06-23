@@ -68,10 +68,10 @@ class FlowerController extends Controller
         $base64 = $request->input('avatar');
         $imgName = 'image_'.time().'.png';
         if($base64 != ""){
-            $link = Storage::disk('public')->putFile("avatars/$imgName", base64_decode($base64), 'public');
+            Storage::disk('public')->put("avatars/$imgName", base64_decode($base64), 'public');
             $flower = new Flower();
             $flower->fill($request->except('avatar'));
-            $flower->avatar = $link;
+            $flower->avatar = "avatars/$imgName";
             $flower->save();
 
             return responder()->success(['Saved successfully'])->respond();
