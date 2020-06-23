@@ -4,7 +4,6 @@
 
 use App\Models\Admin;
 use Faker\Generator as Faker;
-use Illuminate\Support\Facades\Hash;
 
 $factory->define(Admin::class, function (Faker $faker) {
     return [

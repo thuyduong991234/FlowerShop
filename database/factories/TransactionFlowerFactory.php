@@ -12,7 +12,7 @@ $factory->define(TransactionFlower::class, function (Faker $faker) {
         'flower_id' => factory(App\Models\Flower::class),
         'qty' => $faker->numberBetween($min = 1, $max = 1000),
         'amount' => $faker->randomFloat($nbMaxDecimals = 2, $min = 0, $max = 10000),
-        'data' => $faker->text,
-        'status'=>'0'
+        'data' => $faker->realText(),
+        'status' => '0'
     ];
 });

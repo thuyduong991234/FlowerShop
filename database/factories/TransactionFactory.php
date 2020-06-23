@@ -24,9 +24,9 @@ $factory->define(Transaction::class, function (Faker $faker) {
             return Customer::find($trans['customer_id'])->phone;
         },
         'amount' => $faker->randomFloat($nbMaxDecimals = 2, $min = 0, $max = 10000),
-        'payment_method' => $faker->text($maxNbChars = 20),
-        'payment_info' => $faker->text,
-        'message' => $faker->text($maxNbChars = 20),
-        'security' => $faker->text($maxNbChars = 20)
+        'payment_method' => $faker->creditCardType,
+        'payment_info' => $faker->creditCardExpirationDateString,
+        'message' => $faker->realText($maxNbChars = 20),
+        'security' => $faker->ean13
     ];
 });

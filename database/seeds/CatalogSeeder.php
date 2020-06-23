@@ -12,6 +12,6 @@ class CatalogSeeder extends Seeder
     public function run()
     {
         //
-        factory(App\Models\Catalog::class, 5)->create();
+        factory(App\Models\Catalog::class, 50)->create();
     }
 }

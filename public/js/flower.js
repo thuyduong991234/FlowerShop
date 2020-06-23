@@ -59,8 +59,8 @@ $(document).ready(function () {
                         <td >
                         <i class="fas fa-user-edit" style="color: #293c74" name = "btnEdit" data-toggle="modal" data-target="#modalDetailItem"></i>
                         </td><td>` +
-                        item.id + '</td><td>' +
-                        item.catalog_id + '</td><td>' +
+                        item.id + '</td><td catalogID="' + item.catalog_id + '">' +
+                        item.catalog.name + '</td><td>' +
                         item.name + '</td><td>' +
                         item.color + '</td><td>' +
                         item.price + '</td><td>' +
@@ -209,8 +209,8 @@ $(document).ready(function () {
                         <td >
                         <i class="fas fa-user-edit" style="color: #293c74" name = "btnEdit" data-toggle="modal" data-target="#modalDetailItem"></i>
                         </td><td>` +
-                                item.id + '</td><td>' +
-                                item.catalog_id + '</td><td>' +
+                                item.id + '</td><td catalogID="' + item.catalog_id + '">' +
+                                item.catalog.name + '</td><td>' +
                                 item.name + '</td><td>' +
                                 item.color + '</td><td>' +
                                 item.price + '</td><td>' +

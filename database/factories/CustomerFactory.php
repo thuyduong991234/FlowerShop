@@ -4,14 +4,13 @@
 
 use App\Models\Customer;
 use Faker\Generator as Faker;
-use Illuminate\Support\Facades\Hash;
 
 $factory->define(Customer::class, function (Faker $faker) {
     return [
         //
         'last_name' => $faker->lastName,
-        'first_name' => $faker->firstName,
-        'email' => $faker->safeEmail,
+        'first_name' => $faker->firstName($gender = null|(int)('male')|(int)('female')),
+        'email' => $faker->email,
         'password' => "hello",
         'address' => $faker->address,
         'phone' => $faker->phoneNumber,

@@ -13,8 +13,8 @@ $factory->define(Flower::class, function (Faker $faker) {
         'color' => $faker->safeColorName,
         'price' => $faker->randomFloat($nbMaxDecimals = 2, $min = 0, $max = 10000),
         'discount' => $faker->randomFloat($nbMaxDecimals = 1, $min = 0, $max = 1),
-        'avatar' => $faker->url(),
-        'images' => $faker->text($maxNbChars = 20),
+        'avatar' => $faker->imageUrl(),
+        'images' => $faker->realText(),
         'view' => $faker->randomNumber()
     ];
 });
