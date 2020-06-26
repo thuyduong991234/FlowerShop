@@ -27,20 +27,15 @@ class CatalogController extends Controller
      */
     public function index(Request $request)
     {
-        $parentID= $request->input('parentID');
-        $fromDate = $request->input('fromDate');
-        $toDate = $request->input('toDate');
-        $listCatalogs = Catalog::where('name','LIKE','%'.$request->input('name').'%')
-            ->when($parentID, function ($query, $parentID){
-                return $query->where('parent_id','LIKE','%'.$parentID.'%');
-            })
-            ->when($fromDate, function ($query, $fromDate){
-                return $query->whereDate('created_at','>=',$fromDate);
-            })
-            ->when($toDate, function ($query, $toDate){
-                return $query->whereDate('created_at','<=',$toDate);
-            })
-            ->paginate(5);
+        $listCatalogs = Catalog::when($request->name, function ($query) use ($request){
+            return $query->where('name','LIKE','%'.$request->name.'%');
+        })->when($request->parentID, function ($query) use ($request){
+            return $query->where('parent_id','=', $request->parentID);
+        })->when($request->fromDate, function ($query) use ($request){
+            return $query->whereDate('created_at','>=',$request->fromDate);
+        })->when($request->toDate, function ($query) use ($request){
+            return $query->whereDate('created_at','<=',$request->toDate);
+        })->paginate(5);
         //dd($listCatalogs);
         //return $this->fractal->createData(new Collection($listCatalogs,new CatalogTransformer()))->toArray();
 

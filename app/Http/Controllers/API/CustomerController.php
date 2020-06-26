@@ -2,13 +2,18 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Imports\CustomersImport;
 use App\Models\Customer;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CustomerRequestPost;
 use App\Http\Requests\CustomerRequestPut;
+use App\Models\TransactionFlower;
 use App\Transformers\CustomerTransformer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Maatwebsite\Excel\Facades\Excel;
 
 class CustomerController extends Controller
 {
@@ -19,18 +24,16 @@ class CustomerController extends Controller
      */
     public function index(Request $request)
     {
-        $fromDate = $request->input('fromDate');
-        $toDate = $request->input('toDate');
-        $listCustomers = Customer::where('last_name','LIKE','%'.$request->input('lastName').'%')
-            ->where('first_name','LIKE','%'.$request->input('firstName').'%')
-            ->when($fromDate, function ($query, $fromDate){
-                return $query->whereDate('created_at','>=',$fromDate);
-            })
-            ->when($toDate, function ($query, $toDate){
-                return $query->whereDate('created_at','<=',$toDate);
-            })
-            ->paginate(5);
-        //return response($listCustomers, 200);
+        $listCustomers = Customer::when($request->lastName, function ($query) use ($request){
+            return $query->where('last_name','LIKE','%'.$request->lastName.'%');
+        })->when($request->firstName, function ($query) use ($request){
+            return $query->where('first_name','LIKE','%'.$request->firstName.'%');
+        })->when($request->fromDate, function ($query) use ($request){
+            return $query->whereDate('created_at','>=',$request->fromDate);
+        })->when($request->toDate, function ($query) use ($request){
+            return $query->whereDate('created_at','<=',$request->toDate);
+        })->paginate(5);
+
         return responder()->success($listCustomers, CustomerTransformer::class)->with('transactions')->respond();
     }
 
@@ -95,5 +98,39 @@ class CustomerController extends Controller
         //
         $customer->delete();
         return response('Deleted successfully!',204);
+    }
+
+    public function statistic()
+    {
+        $customers = Customer::all();
+        $customers->map(function ($customer){
+            $transactions = $customer->transactions()->whereYear('created_at', '=', Carbon::now()->year)
+                ->whereMonth('created_at', '=', Carbon::now()->month)
+                ->get();
+
+            $listId = $transactions->map(function ($val) {
+                return $val->id;
+            });
+
+            $result = TransactionFlower::join('flowers', 'flowers.id', '=', 'transaction_flower.flower_id')
+                ->select('flowers.id', 'flowers.name', DB::raw('SUM(transaction_flower.qty) as qty'))
+                ->whereIn('transaction_flower.transaction_id', $listId)
+                ->groupBy('flowers.id', 'flowers.name')
+                ->get();
+            $customer->flowers = $result;
+        });
+
+        //return response(['customer' => $customer, 'flowers' => $result]);
+        return responder()->success($customers)->respond();
+    }
+
+    public function import(Request $request)
+    {
+        if($request->hasFile('customers'))
+        {
+            Excel::import(new CustomersImport(), $request->file('customers'));
+            return responder()->success(['Saved successfully'])->respond();
+        }
+        return responder()->error(["Don't have file"])->respond();
     }
 }

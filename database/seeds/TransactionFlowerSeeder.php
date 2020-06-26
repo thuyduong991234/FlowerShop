@@ -12,6 +12,6 @@ class TransactionFlowerSeeder extends Seeder
     public function run()
     {
         //
-        factory(App\Models\TransactionFlower::class, 5)->create();
+        factory(App\Models\TransactionFlower::class, 30)->create();
     }
 }

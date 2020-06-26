@@ -2,15 +2,19 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Exports\FlowersExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\FlowerRequestPatch;
 use App\Http\Requests\FlowerRequestPost;
+use App\Imports\FlowersImport;
 use App\Transformers\FlowerTransformer;
 use Flugg\Responder\TransformBuilder;
 use Illuminate\Http\Request;
 use App\Models\Flower;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Facades\Excel;
+use Maatwebsite\Excel\Validators\ValidationException;
 
 class FlowerController extends Controller
 {
@@ -21,17 +25,15 @@ class FlowerController extends Controller
      */
     public function index(Request $request)
     {
-        $fromDate = $request->input('fromDate');
-        $toDate = $request->input('toDate');
-        $listFlowers = Flower::where('name','LIKE','%'.$request->input('name').'%')
-            ->where('color','LIKE','%'.$request->input('color').'%')
-            ->when($fromDate, function ($query, $fromDate){
-                return $query->whereDate('created_at','>=',$fromDate);
-            })
-            ->when($toDate, function ($query, $toDate){
-                return $query->whereDate('created_at','<=',$toDate);
-            })
-            ->paginate(5);
+        $listFlowers = Flower::when($request->name, function ($query) use ($request){
+            return $query->where('name','LIKE','%'.$request->name.'%');
+        })->when($request->color, function ($query) use ($request){
+            return $query->where('color','LIKE','%'.$request->color.'%');
+        })->when($request->fromDate, function ($query) use ($request){
+            return $query->whereDate('created_at','>=',$request->fromDate);
+        })->when($request->toDate, function ($query) use ($request){
+            return $query->whereDate('created_at','<=',$request->toDate);
+        })->paginate(5);
         //return response($listFlowers, 200);
         return responder()->success($listFlowers, FlowerTransformer::class)->with('catalog')->respond();
     }
@@ -117,5 +119,61 @@ class FlowerController extends Controller
         //
         $flower->delete();
         return response('Deleted successfully', 204);
+    }
+
+    public function export()
+    {
+        /*
+        $fileName = 'flower'.time() . '.csv';
+        Storage::disk('public')->put("$fileName","");
+
+        $path = Storage::disk('public')->getAdapter()->applyPathPrefix($fileName);
+
+        $data= Flower::all();
+        $header = array('Id', 'Catalog Id', 'Name', 'Color', 'Price', 'Discount', 'Avatar', 'Images', 'View', 'Created_at', 'Updated_at');
+        //echo "\xEF\xBB\xBF";/// Byte Order Mark HERE!!!!
+        $file = fopen($path, 'w+');
+        fputcsv($file, $header);
+        foreach($data as $flower) {
+            fputcsv($file, array(
+                $flower->id,
+                $flower->catalog_id,
+                mb_convert_encoding($flower->name, "SJIS"),
+                mb_convert_encoding($flower->color, "SJIS"),
+                //$flower->name,
+                //$flower->color,
+                $flower->price,
+                $flower->discount,
+                $flower->avatar,
+                mb_convert_encoding($flower->images, "SJIS"),
+                //$flower->images,
+                $flower->view,
+                $flower->created_at,
+                $flower->updated_at,
+            ));
+
+        }
+        fseek($file, 0);
+        header('Content-Encoding: SJIS');
+        header('Content-Type: application/csv; charset=SJIS');
+        header('Content-Disposition: attachement; filename="'.$fileName.'";');
+        //return Excel::store(new FlowersExport, 'flowers.csv');
+        fpassthru($file);
+
+        die();*/
+
+        $fileName = 'flower'.time() . '.csv';
+        //return Excel::store(new FlowersExport, $fileName, 'public');
+        return Excel::download(new FlowersExport, $fileName, \Maatwebsite\Excel\Excel::CSV);
+    }
+
+    public function import(Request $request)
+    {
+        if($request->hasFile('flowers'))
+        {
+            Excel::import(new FlowersImport, $request->file('flowers'));
+            return responder()->success(['Saved successfully'])->respond();
+        }
+        return responder()->error(["Don't have file"])->respond();
     }
 }

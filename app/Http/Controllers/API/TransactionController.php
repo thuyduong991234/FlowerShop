@@ -18,19 +18,18 @@ class TransactionController extends Controller
      */
     public function index(Request $request)
     {
-        $fromDate = $request->input('fromDate');
-        $toDate = $request->input('toDate');
-        $listTransactions = Transaction::where('status','LIKE','%'.$request->input('status').'%')
-            ->where('customer_last_name','LIKE','%'.$request->input('lastName').'%')
-            ->where('customer_first_name','LIKE','%'.$request->input('firstName').'%')
-            ->when($fromDate, function ($query, $fromDate){
-                return $query->whereDate('created_at','>=',$fromDate);
-            })
-            ->when($toDate, function ($query, $toDate){
-                return $query->whereDate('created_at','<=',$toDate);
-            })
-            ->paginate(5);
-        //return response($listTransactions, 200);
+        $listTransactions = Transaction::when($request->status, function ($query) use ($request){
+            return $query->where('status','=',$request->status);
+        })->when($request->lastName, function ($query) use ($request){
+            return $query->where('customer_last_name','LIKE','%'.$request->lastName.'%');
+        })->when($request->firstName, function ($query) use ($request){
+            return $query->where('customer_first_name','LIKE','%'.$request->firstName.'%');
+        })->when($request->fromDate, function ($query) use ($request){
+            return $query->whereDate('created_at','>=',$request->fromDate);
+        })->when($request->toDate, function ($query) use ($request){
+            return $query->whereDate('created_at','<=',$request->toDate);
+        })->paginate(5);
+
         return responder()->success($listTransactions, TransactionTransformer::class)->with(['flowers','customer'])->respond();
     }
 
