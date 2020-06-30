@@ -2,19 +2,16 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Exports\FlowersExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\FlowerRequestPatch;
 use App\Http\Requests\FlowerRequestPost;
 use App\Imports\FlowersImport;
 use App\Transformers\FlowerTransformer;
-use Flugg\Responder\TransformBuilder;
 use Illuminate\Http\Request;
 use App\Models\Flower;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
-use Maatwebsite\Excel\Validators\ValidationException;
+use Rap2hpoutre\FastExcel\FastExcel;
 
 class FlowerController extends Controller
 {
@@ -123,48 +120,8 @@ class FlowerController extends Controller
 
     public function export()
     {
-        /*
         $fileName = 'flower'.time() . '.csv';
-        Storage::disk('public')->put("$fileName","");
-
-        $path = Storage::disk('public')->getAdapter()->applyPathPrefix($fileName);
-
-        $data= Flower::all();
-        $header = array('Id', 'Catalog Id', 'Name', 'Color', 'Price', 'Discount', 'Avatar', 'Images', 'View', 'Created_at', 'Updated_at');
-        //echo "\xEF\xBB\xBF";/// Byte Order Mark HERE!!!!
-        $file = fopen($path, 'w+');
-        fputcsv($file, $header);
-        foreach($data as $flower) {
-            fputcsv($file, array(
-                $flower->id,
-                $flower->catalog_id,
-                mb_convert_encoding($flower->name, "SJIS"),
-                mb_convert_encoding($flower->color, "SJIS"),
-                //$flower->name,
-                //$flower->color,
-                $flower->price,
-                $flower->discount,
-                $flower->avatar,
-                mb_convert_encoding($flower->images, "SJIS"),
-                //$flower->images,
-                $flower->view,
-                $flower->created_at,
-                $flower->updated_at,
-            ));
-
-        }
-        fseek($file, 0);
-        header('Content-Encoding: SJIS');
-        header('Content-Type: application/csv; charset=SJIS');
-        header('Content-Disposition: attachement; filename="'.$fileName.'";');
-        //return Excel::store(new FlowersExport, 'flowers.csv');
-        fpassthru($file);
-
-        die();*/
-
-        $fileName = 'flower'.time() . '.csv';
-        //return Excel::store(new FlowersExport, $fileName, 'public');
-        return Excel::download(new FlowersExport, $fileName, \Maatwebsite\Excel\Excel::CSV);
+        return (new FastExcel(Flower::all()))->download($fileName);
     }
 
     public function import(Request $request)
@@ -173,7 +130,9 @@ class FlowerController extends Controller
         {
             Excel::import(new FlowersImport, $request->file('flowers'));
             return responder()->success(['Saved successfully'])->respond();
+
         }
         return responder()->error(["Don't have file"])->respond();
+
     }
 }

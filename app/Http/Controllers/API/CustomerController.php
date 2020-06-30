@@ -14,6 +14,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
+use Rap2hpoutre\FastExcel\FastExcel;
 
 class CustomerController extends Controller
 {
@@ -132,5 +133,11 @@ class CustomerController extends Controller
             return responder()->success(['Saved successfully'])->respond();
         }
         return responder()->error(["Don't have file"])->respond();
+    }
+
+    public function export()
+    {
+        $fileName = 'customer'.time() . '.csv';
+        return (new FastExcel(Customer::all()))->download($fileName);
     }
 }

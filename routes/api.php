@@ -19,6 +19,9 @@ Route::namespace('API')->group(function () {
     //Route::middleware(['check.token'])->group(function () {
     //
     Route::apiResource('flowers', 'FlowerController');
+    Route::get('flowers-export', 'FlowerController@export')->name('flowers.export');
+    Route::post('flowers-import', 'FlowerController@import')->name('flowers.import');
+
     Route::apiResource('catalogs', 'CatalogController');
     Route::apiResource('transactions', 'TransactionController');
     //});
@@ -26,17 +29,13 @@ Route::namespace('API')->group(function () {
     //Route::middleware(['check.token','check.role:api'])->group(function () {
     //
     Route::apiResource('customers', 'CustomerController');
-    Route::get('flowers-export', 'FlowerController@export')->name('flowers.export');
-    Route::post('flowers-import', 'FlowerController@import')->name('flowers.import');
     Route::get('customers-statistic', 'CustomerController@statistic')->name('customers.statistic');
     Route::post('customers-import', 'CustomerController@import')->name('customers.import');
+    Route::get('customers-export', 'CustomerController@export')->name('customers.export');
     //});
 
 });
-Route::get('test', function (){
-    $a = iconv('SJIS', "UTF-8", "中島 学");
-    \Illuminate\Support\Facades\Storage::disk('public')->put('test.csv', '中島 学');
-});
+
 
 Route::get('get-catalogs', 'API\CatalogController@getAll')->name('catalogs.getall');
 
