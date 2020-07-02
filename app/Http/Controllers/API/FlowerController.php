@@ -6,9 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\FlowerRequestPatch;
 use App\Http\Requests\FlowerRequestPost;
 use App\Imports\FlowersImport;
+use App\Models\TransactionFlower;
 use App\Transformers\FlowerTransformer;
 use Illuminate\Http\Request;
 use App\Models\Flower;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 use Rap2hpoutre\FastExcel\FastExcel;
@@ -144,5 +147,24 @@ class FlowerController extends Controller
         }
         return responder()->error(["Don't have file"])->respond();
 
+    }
+
+    public function statistic(Request $request)
+    {
+        $flowers = Flower::all();
+        $flowers->map(function ($flower) use ($request){
+            $transactions = $flower->transactions()->whereYear('transactions.created_at', '=', $request->input('year'))
+                ->whereMonth('transactions.created_at', '=', $request->input('month'))
+                ->get();
+
+            $listId = $transactions->map(function ($val) {
+                return $val->id;
+            });
+            $flower->sold = TransactionFlower::selectRaw('SUM(transaction_flower.qty) as sold')
+                ->whereIn('transaction_flower.transaction_id', $listId)
+                ->where('transaction_flower.flower_id','=',$flower->id)
+                ->first()->sold;
+        });
+        return responder()->success($flowers)->respond();
     }
 }

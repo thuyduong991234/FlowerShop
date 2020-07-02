@@ -21,6 +21,7 @@ Route::namespace('API')->group(function () {
     Route::apiResource('flowers', 'FlowerController');
     Route::get('flowers-export', 'FlowerController@export')->name('flowers.export');
     Route::post('flowers-import', 'FlowerController@import')->name('flowers.import');
+    Route::get('flowers-statistic', 'FlowerController@statistic')->name('flowers.statistic');
 
     Route::apiResource('catalogs', 'CatalogController');
     Route::apiResource('transactions', 'TransactionController');
