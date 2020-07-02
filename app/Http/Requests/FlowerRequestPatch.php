@@ -27,7 +27,7 @@ class FlowerRequestPatch extends FormRequest
             //
             'catalog_id' => 'exists:catalogs,id',
             'name' => 'sometimes|required|max:191',
-            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg'
+            //'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg'
         ];
     }
 

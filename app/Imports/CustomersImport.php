@@ -20,6 +20,7 @@ class CustomersImport implements ToModel,WithHeadingRow, WithValidation, SkipsOn
     */
     public function model(array $row)
     {
+        //dd($row);
         return new Customer([
             //
             'last_name'     => $row['last_name'],

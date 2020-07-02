@@ -21,7 +21,6 @@ class FlowersImport implements ToModel,WithHeadingRow, WithValidation, SkipsOnFa
     public function model(array $row)
     {
         //dd($row);
-
         return new Flower([
             //
             'catalog_id'     => $row['catalog_id'],

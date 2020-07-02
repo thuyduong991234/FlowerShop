@@ -17,7 +17,7 @@ class LoginController extends Controller
 
         return response()->json([
             'message' => 'Successfully registered',
-            'admin' => $customer
+            'customer' => $customer
         ], 201);
     }
 
@@ -36,7 +36,11 @@ class LoginController extends Controller
 
         if($token = auth('customer')->attempt($validator->validated()))
         {
-            return response($token, 200);
+            $payload = auth()->payload();
+            return response(["message" => "Login successfully!",
+                "guard" => "customer",
+                "token" => $token,
+                "exp" => date("Y-m-d H:i:s", $payload('exp'))], 200);
         }
         return response(['error' => 'Unauthorized'], 401);
     }
@@ -44,6 +48,6 @@ class LoginController extends Controller
     public function logout()
     {
         auth()->logout();
-        return response("Logout successfully!",200);
+        return response(["message" => "Logout successfully!"],200);
     }
 }

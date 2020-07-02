@@ -96,26 +96,36 @@ class FlowerController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return
      */
     public function update(FlowerRequestPatch $request, Flower $flower)
     {
         //
-        $flower->update($request->all());
-        return response('Updated successfully', 200);
+        //dd($request->all());
+        $base64 = $request->input('avatar');
+        $imgName = 'image_'.time().'.png';
+        if($base64 != ""){
+            Storage::disk('public')->put("avatars/$imgName", base64_decode($base64), 'public');
+            $flower->update([$request->except('avatar'),
+                'avatar' => "avatars/$imgName"
+            ]);
+            return responder()->success(['Updated successfully'])->respond();
+        }
+
+        return responder()->error(["Failed"])->respond();
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return
      */
     public function destroy(Flower $flower)
     {
         //
         $flower->delete();
-        return response('Deleted successfully', 204);
+        return responder()->success(['Deleted successfully!'])->respond();
     }
 
     public function export()

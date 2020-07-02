@@ -42,7 +42,7 @@ class CustomerController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return
      */
     public function store(CustomerRequestPost $request)
     {
@@ -53,7 +53,7 @@ class CustomerController extends Controller
         //$customer->save();
         Customer::create($request->all());
 
-        return response('Saved successfully', 201);
+        return responder()->success(['Saved successfully'])->respond();
     }
 
     /**
@@ -74,17 +74,17 @@ class CustomerController extends Controller
      *
      * @param CustomerRequestPut $request
      * @param Customer $customer
-     * @return \Illuminate\Http\Response
+     * @return
      */
     public function update(CustomerRequestPut $request, Customer $customer)
     {
         //dd($customer);
         if(Hash::check($request->input('oldPassword'), $customer->password) ) {
             $customer->update($request->all());
-            return response('Updated successfully', 200);
+            return responder()->success(['Updated successfully'])->respond();
         }
         else{
-            return response("Current password isn't right!", 422);
+            return responder()->error(["Current password isn't right!"])->respond();
         }
     }
 
@@ -98,7 +98,7 @@ class CustomerController extends Controller
     {
         //
         $customer->delete();
-        return response('Deleted successfully!',204);
+        return responder()->success(['Deleted successfully!'])->respond();
     }
 
     public function statistic()
@@ -120,8 +120,6 @@ class CustomerController extends Controller
                 ->get();
             $customer->flowers = $result;
         });
-
-        //return response(['customer' => $customer, 'flowers' => $result]);
         return responder()->success($customers)->respond();
     }
 

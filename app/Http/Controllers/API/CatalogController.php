@@ -73,7 +73,7 @@ class CatalogController extends Controller
         //
         Catalog::create($request->all());
 
-        return responder()->success()->respond();
+        return responder()->success(['Saved successfully'])->respond();
     }
 
     /**
@@ -100,7 +100,7 @@ class CatalogController extends Controller
     {
         //
         $catalog->update($request->all());
-        return responder()->success()->respond();
+        return responder()->success(['Updated successfully'])->respond();
     }
 
     /**
@@ -113,6 +113,6 @@ class CatalogController extends Controller
     {
         //
         $catalog->delete();
-        return responder()->success()->respond();
+        return responder()->success(['Deleted successfully!'])->respond();
     }
 }

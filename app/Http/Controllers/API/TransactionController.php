@@ -37,13 +37,13 @@ class TransactionController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return
      */
     public function store(TransactionRequestPost $request)
     {
         //
         Transaction::create($request->all());
-        return response('Saved successfully!', 201);
+        return responder()->success(['Saved successfully!'])->respond();
     }
 
     /**
@@ -63,25 +63,25 @@ class TransactionController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return
      */
     public function update(TransactionRequestPut $request, Transaction $transaction)
     {
         //
         $transaction->update($request->all());
-        return response('Updated successfully!', 200);
+        return responder()->success(['Updated successfully!'])->respond();
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return
      */
     public function destroy(Transaction $transaction)
     {
         //
         $transaction->delete();
-        return response('Deleted successfully!',204);
+        return responder()->success(['Deleted successfully!'])->respond();
     }
 }
