@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Traits\UtilTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Tymon\JWTAuth\Contracts\JWTSubject;

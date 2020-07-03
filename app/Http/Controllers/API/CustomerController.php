@@ -104,23 +104,18 @@ class CustomerController extends Controller
     public function statistic(Request $request)
     {
         $customers = Customer::all();
-        /*$customers->map(function ($customer) use($request){
-            $transactions = $customer->transactions()->whereYear('created_at', '=', $request->input('year'))
-                ->whereMonth('created_at', '=', $request->input('month'))
-                ->get();
-
-            $result = TransactionFlower::join('flowers', 'flowers.id', '=', 'transaction_flower.flower_id')
+        $customers->map(function ($customer) use($request){
+            $result = TransactionFlower::join('transactions', 'transactions.id','=','transaction_flower.transaction_id')
+                ->whereYear('transactions.created_at', '=', $request->input('year'))
+                ->whereMonth('transactions.created_at', '=', $request->input('month'))
+                ->where('transactions.customer_id','=',$customer->id)
+                ->join('flowers', 'flowers.id', '=', 'transaction_flower.flower_id')
                 ->select('flowers.id', 'flowers.name', DB::raw('SUM(transaction_flower.qty) as qty'))
-                ->whereIn('transaction_flower.transaction_id', $transactions)
                 ->groupBy('flowers.id', 'flowers.name')
                 ->get();
             $customer->flowers = $result;
-        });*/
-        //$customers = Customer::all()->each->transactions;
-        //$transactions = Transaction::whereYear('created_at', '=', $request->input('year'))
-         //   ->whereMonth('created_at', '=', $request->input('month'))
-           // ->with('customer')->get();
-        return responder()->success(Customer::all())->respond();
+        });
+        return response($customers);
     }
 
     public function import(Request $request)
