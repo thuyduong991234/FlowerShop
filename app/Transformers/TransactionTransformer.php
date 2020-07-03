@@ -4,6 +4,7 @@ namespace App\Transformers;
 
 use App\Models\Transaction;
 use Flugg\Responder\Transformers\Transformer;
+use Illuminate\Support\Facades\DB;
 
 class TransactionTransformer extends Transformer
 {
@@ -14,7 +15,7 @@ class TransactionTransformer extends Transformer
      */
     protected $relations = [
         'flowers' => FlowerTransformer::class,
-        'customer' => CustomerTransformer::class
+        'customer' => CustomerTransformer::class,
     ];
 
     /**

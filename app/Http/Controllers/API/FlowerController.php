@@ -79,7 +79,7 @@ class FlowerController extends Controller
             return responder()->success(['Saved successfully'])->respond();
         }
 
-        return responder()->error(["Don't have file"])->respond();
+        return responder()->error(500, "Don't have file")->respond();
     }
 
     /**
@@ -97,25 +97,24 @@ class FlowerController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param
      * @param  int  $id
      * @return
      */
     public function update(FlowerRequestPatch $request, Flower $flower)
     {
-        //
-        //dd($request->all());
+        //dd($request);
         $base64 = $request->input('avatar');
         $imgName = 'image_'.time().'.png';
         if($base64 != ""){
             Storage::disk('public')->put("avatars/$imgName", base64_decode($base64), 'public');
-            $flower->update([$request->except('avatar'),
-                'avatar' => "avatars/$imgName"
-            ]);
+            $flower->fill($request->except('avatar'));
+            $flower->avatar = "avatars/$imgName";
+            $flower->save();
             return responder()->success(['Updated successfully'])->respond();
         }
 
-        return responder()->error(["Failed"])->respond();
+        return responder()->error(500, "Updated fail")->respond();
     }
 
     /**
@@ -145,26 +144,37 @@ class FlowerController extends Controller
             return responder()->success(['Saved successfully'])->respond();
 
         }
-        return responder()->error(["Don't have file"])->respond();
+        return responder()->error(500, "Don't have file")->respond();
 
     }
 
     public function statistic(Request $request)
     {
-        $flowers = Flower::all();
-        $flowers->map(function ($flower) use ($request){
-            $transactions = $flower->transactions()->whereYear('transactions.created_at', '=', $request->input('year'))
-                ->whereMonth('transactions.created_at', '=', $request->input('month'))
-                ->get();
+        //$flowers = Flower::all();
+//        $flowers->map(function ($flower) use ($request){
+//            $transactions = $flower->transactions()->whereYear('transactions.created_at', '=', $request->input('year'))
+//                ->whereMonth('transactions.created_at', '=', $request->input('month'))
+//                ->get();
+//
+//            $listId = $transactions->map(function ($val) {
+//                return $val->id;
+//            });
+//            $flower->sold = TransactionFlower::selectRaw('SUM(transaction_flower.qty) as sold')
+//                ->whereIn('transaction_flower.transaction_id', $listId)
+//                ->where('transaction_flower.flower_id','=',$flower->id)
+//                ->first()->sold;
+//        });
 
-            $listId = $transactions->map(function ($val) {
-                return $val->id;
-            });
-            $flower->sold = TransactionFlower::selectRaw('SUM(transaction_flower.qty) as sold')
-                ->whereIn('transaction_flower.transaction_id', $listId)
-                ->where('transaction_flower.flower_id','=',$flower->id)
-                ->first()->sold;
-        });
+        //dd($request);
+        $flowers = TransactionFlower::join('transactions', function ($join) use ($request){
+                $join->on('transactions.id', '=', 'transaction_flower.transaction_id')
+                    ->whereYear('transactions.created_at', '=', $request->input('year'))
+                    ->whereMonth('transactions.created_at', '=', $request->input('month'));
+            })
+            ->rightJoin('flowers', 'transaction_flower.flower_id', '=', 'flowers.id')
+            ->select('flowers.id', 'flowers.name', DB::raw('SUM(transaction_flower.qty) as sold'))
+            ->groupBy('flowers.id', 'flowers.name')
+            ->get();
         return responder()->success($flowers)->respond();
     }
 }

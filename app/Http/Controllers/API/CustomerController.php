@@ -78,13 +78,13 @@ class CustomerController extends Controller
      */
     public function update(CustomerRequestPut $request, Customer $customer)
     {
-        //dd($customer);
+        //dd($request->all());
         if(Hash::check($request->input('oldPassword'), $customer->password) ) {
             $customer->update($request->all());
             return responder()->success(['Updated successfully'])->respond();
         }
         else{
-            return responder()->error(["Current password isn't right!"])->respond();
+            return responder()->error(500, "Current password isn't right!")->respond();
         }
     }
 
@@ -101,26 +101,26 @@ class CustomerController extends Controller
         return responder()->success(['Deleted successfully!'])->respond();
     }
 
-    public function statistic()
+    public function statistic(Request $request)
     {
         $customers = Customer::all();
-        $customers->map(function ($customer){
-            $transactions = $customer->transactions()->whereYear('created_at', '=', Carbon::now()->year)
-                ->whereMonth('created_at', '=', Carbon::now()->month)
+        /*$customers->map(function ($customer) use($request){
+            $transactions = $customer->transactions()->whereYear('created_at', '=', $request->input('year'))
+                ->whereMonth('created_at', '=', $request->input('month'))
                 ->get();
-
-            $listId = $transactions->map(function ($val) {
-                return $val->id;
-            });
 
             $result = TransactionFlower::join('flowers', 'flowers.id', '=', 'transaction_flower.flower_id')
                 ->select('flowers.id', 'flowers.name', DB::raw('SUM(transaction_flower.qty) as qty'))
-                ->whereIn('transaction_flower.transaction_id', $listId)
+                ->whereIn('transaction_flower.transaction_id', $transactions)
                 ->groupBy('flowers.id', 'flowers.name')
                 ->get();
             $customer->flowers = $result;
-        });
-        return responder()->success($customers)->respond();
+        });*/
+        //$customers = Customer::all()->each->transactions;
+        //$transactions = Transaction::whereYear('created_at', '=', $request->input('year'))
+         //   ->whereMonth('created_at', '=', $request->input('month'))
+           // ->with('customer')->get();
+        return responder()->success(Customer::all())->respond();
     }
 
     public function import(Request $request)
@@ -130,7 +130,7 @@ class CustomerController extends Controller
             Excel::import(new CustomersImport(), $request->file('customers'));
             return responder()->success(['Saved successfully'])->respond();
         }
-        return responder()->error(["Don't have file"])->respond();
+        return responder()->error(500, "Don't have file")->respond();
     }
 
     public function export()

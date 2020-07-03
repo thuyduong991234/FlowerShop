@@ -30,7 +30,7 @@ class TransactionController extends Controller
             return $query->whereDate('created_at','<=',$request->toDate);
         })->paginate(5);
 
-        return responder()->success($listTransactions, TransactionTransformer::class)->with(['flowers','customer'])->respond();
+        return responder()->success($listTransactions, TransactionTransformer::class)->with(['flowers', 'customer'])->respond();
     }
 
     /**

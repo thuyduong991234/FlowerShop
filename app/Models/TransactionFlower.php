@@ -18,4 +18,14 @@ class TransactionFlower extends Pivot
         'data',
         'status'
     ];
+
+    public function flower()
+    {
+        return $this->belongsTo(Flower::class);
+    }
+
+    public function transaction()
+    {
+        return $this->belongsTo(Transaction::class);
+    }
 }

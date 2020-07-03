@@ -27,7 +27,7 @@ class Customer extends Authenticatable implements JWTSubject
     ];
 
     protected $appends = ['full_name'];
-    //protected $with = ['transactions'];
+    //protected $with = ['transactionFlower'];
 
 
     protected $casts = [
@@ -37,6 +37,16 @@ class Customer extends Authenticatable implements JWTSubject
     public function transactions()
     {
         return $this->hasMany(Transaction::class);
+    }
+
+    public function transactionFlower()
+    {
+        return $this->hasManyThrough(TransactionFlower::class, Transaction::class,
+            'customer_id', // Foreign key on users table...
+            'transaction_id', // Foreign key on posts table...
+            'id', // Local key on countries table...
+            'id' // Local key on users table...
+        );
     }
 
     public function getFullNameAttribute()
