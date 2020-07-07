@@ -35,7 +35,8 @@ class Transaction extends Model
     public function flowers()
     {
         return $this->belongsToMany(Flower::class,'transaction_flower', 'transaction_id', 'flower_id')->withPivot([
-            'qty'
+            'qty',
+            'amount'
         ]);
     }
 }

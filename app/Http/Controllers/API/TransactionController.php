@@ -5,9 +5,12 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TransactionRequestPost;
 use App\Http\Requests\TransactionRequestPut;
+use App\Mail\TransactionMail;
 use App\Models\Transaction;
+use App\Models\TransactionFlower;
 use App\Transformers\TransactionTransformer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class TransactionController extends Controller
 {
@@ -42,7 +45,15 @@ class TransactionController extends Controller
     public function store(TransactionRequestPost $request)
     {
         //
-        Transaction::create($request->all());
+        $transaction = Transaction::create($request->except('flowers'));
+        foreach ($request->input('flowers') as $flower)
+        {
+            $new = new TransactionFlower();
+            $new->fill($flower);
+            $new->transaction_id = $transaction->id;
+            $new->save();
+        }
+        Mail::to($request->input('customer_email'))->send(new TransactionMail($transaction));
         return responder()->success(['Saved successfully!'])->respond();
     }
 
